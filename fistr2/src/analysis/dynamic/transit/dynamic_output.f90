@@ -659,6 +659,7 @@ contains
       integer :: ig, ig0, iS0, iE0, ik, iS, iE, ic_type, nn, jS, icel
       integer :: i,j,k, in, itype, ielem, ID_area, ii,jj
       real(kind=KREAL) :: s11, s22, s33, s12, s23, s13, ps, smises
+      integer :: tmp1_ielem, tmp2_ielem, tmp3_ielem, tmp4_ielem
 	  
 !*Allocate array
       allocate ( arrayTotal( hecMESH%n_node, 9  )    ,STAT=ierror) 
@@ -739,8 +740,12 @@ contains
           ID_area = hecMESH%elem_ID(icel*2)
           if( ID_area.eq.hecMESH%my_rank ) then
             call ElementStress_C2(ic_type,fstrSOLID%elements(icel)%gausses,estrain,estress)
-            fstrSOLID%ESTRAIN(6*ielem-5:6*ielem) = estrain
-            fstrSOLID%ESTRESS(7*ielem-6:7*ielem-1) = estress
+            tmp1_ielem = 6*ielem-5
+            tmp2_ielem = 6*ielem
+            fstrSOLID%ESTRAIN(tmp1_ielem:tmp2_ielem) = estrain
+            tmp3_ielem = 7*ielem-6
+            tmp4_ielem = 7*ielem-1
+            fstrSOLID%ESTRESS(tmp3_ielem:tmp4_ielem) = estress
             s11=fstrSOLID%ESTRESS(7*ielem-6)
             s22=fstrSOLID%ESTRESS(7*ielem-5)
             s33=fstrSOLID%ESTRESS(7*ielem-4)
